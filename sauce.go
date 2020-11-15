@@ -2,6 +2,7 @@ package sengoku
 
 import (
 	"fmt"
+	"net/url"
 	"regexp"
 )
 
@@ -125,7 +126,7 @@ var (
 			if matches := nhentaiRegex.FindAllString(r.Header.Thumbnail, -1); matches != nil {
 				source = fmt.Sprintf("https://nhentai.net/g/%v", matches[1])
 			} else {
-				source = fmt.Sprintf("https://nhentai.net/search/?q=%v", r.Data.Source)
+				source = fmt.Sprintf("https://nhentai.net/search/?q=%v", url.QueryEscape(r.Data.Source))
 			}
 
 			sauce := &Sauce{
@@ -237,7 +238,7 @@ var (
 					Name: creator,
 				},
 				URLs: &SauceURLs{
-					Source: fmt.Sprintf("https://e-hentai.org/?f_search=%v", r.Data.Source),
+					Source: fmt.Sprintf("https://e-hentai.org/?f_search=%v", url.QueryEscape(r.Data.Source)),
 				},
 				Raw: r,
 			}

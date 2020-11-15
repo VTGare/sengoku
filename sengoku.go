@@ -92,12 +92,13 @@ func DefaultConfig() *Config {
 }
 
 //NewSengoku creates a new Sengoku application instance.
-func NewSengoku(config ...Config) *Sengoku {
+func NewSengoku(apikey string, config ...Config) *Sengoku {
 	sengoku := &Sengoku{DefaultConfig(), &http.Client{}, "https://saucenao.com"}
 	if len(config) != 0 {
 		sengoku.DefaultConfig = &config[0]
 	}
 
+	sengoku.DefaultConfig.APIKey = apikey
 	return sengoku
 }
 

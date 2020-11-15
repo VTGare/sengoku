@@ -6,7 +6,7 @@ type responce struct {
 }
 
 type header struct {
-	AccountType       int     `json:"account_type,omitempty"`
+	AccountType       string  `json:"account_type,omitempty"`
 	LongLimit         string  `json:"long_limit,omitempty"`
 	LongRemaining     int     `json:"long_remaining,omitempty"`
 	Message           string  `json:"message,omitempty"`

@@ -74,8 +74,8 @@ func TestSengokuSearch(t *testing.T) {
 		want    *Sauce
 		wantErr bool
 	}{
-		{"Test", NewSengoku("306b5fbcaf1ca5a29202ed30426e26b56bc16637"), args{"https://api.kotori.love/pixiv/image/i.pximg.net/c/600x1200_90_webp/img-master/img/2020/11/14/17/43/50/85663331_p0_master1200.jpg"}, nil, false},
-		{"Test", NewSengoku("306b5fbcaf1ca5a29202ed30426e26b56bc16637"), args{"https://6hf997t63vhfe.hjvvk1hhwfv4m.mangadex.network/99T_ZD6OgN-AYrbjhe5DtVxsaplJx05ZR7Yx8uhY5uOp4zlvy8hsv4MhiCTYPXEQ1g6eR763h4NxIRk4D5Nar3wUYn9k8Tfb8R1GDN85r7HCSr2-4rgYLJDdrjjDE1lDJvLZJDZm6PNGN791FKPqID5JhbtQ-Oweu61uxo1mfIxQK-7PkKuVLhcNv7A85HjjXBR6guUvfcY8GVeOyebW7B7cM34NmA/data/341ab55d1dd3c0a5c71b2813d0175de3/1-fd9f59c8e0adc0647af1d721886487ce1320a234395c8ab5e1a357302e1606d5.png"}, nil, false},
+		{"Test", NewSengoku(""), args{"https://api.kotori.love/pixiv/image/i.pximg.net/c/600x1200_90_webp/img-master/img/2020/11/14/17/43/50/85663331_p0_master1200.jpg"}, nil, false},
+		{"Test", NewSengoku(""), args{"https://6hf997t63vhfe.hjvvk1hhwfv4m.mangadex.network/99T_ZD6OgN-AYrbjhe5DtVxsaplJx05ZR7Yx8uhY5uOp4zlvy8hsv4MhiCTYPXEQ1g6eR763h4NxIRk4D5Nar3wUYn9k8Tfb8R1GDN85r7HCSr2-4rgYLJDdrjjDE1lDJvLZJDZm6PNGN791FKPqID5JhbtQ-Oweu61uxo1mfIxQK-7PkKuVLhcNv7A85HjjXBR6guUvfcY8GVeOyebW7B7cM34NmA/data/341ab55d1dd3c0a5c71b2813d0175de3/1-fd9f59c8e0adc0647af1d721886487ce1320a234395c8ab5e1a357302e1606d5.png"}, nil, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

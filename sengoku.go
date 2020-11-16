@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"sort"
 	"strconv"
 
 	"github.com/sirupsen/logrus"
@@ -127,16 +128,21 @@ func (s *Sengoku) Search(imageURL string) ([]*Sauce, error) {
 
 	sauces := make([]*Sauce, len(res.Results))
 	for ind, r := range res.Results {
-		sauce := &Sauce{}
 		if toSauce, ok := sites[r.Header.IndexID]; ok {
-			sauce = toSauce(r)
+			sauce, err := toSauce(r)
+			if err != nil {
+				logrus.Warnf("toSauce(): %v", err)
+				continue
+			}
 			sauce.Pretty = true
+			sauces[ind] = sauce
 		} else {
-			sauce = &Sauce{Raw: r}
+			sauce := &Sauce{Raw: r}
+			sauces[ind] = sauce
 		}
-		sauces[ind] = sauce
 	}
 
+	sort.Sort(bySimilarity(sauces))
 	return sauces, nil
 }
 
@@ -169,8 +175,14 @@ func (s *Sengoku) SearchWithConfig(imageURL string, config *Config) ([]*Sauce, e
 	sauces := make([]*Sauce, len(res.Results))
 	for ind, r := range res.Results {
 		sauce := &Sauce{}
+		var err error
+
 		if toSauce, ok := sites[r.Header.IndexID]; ok {
-			sauce = toSauce(r)
+			sauce, err = toSauce(r)
+			if err != nil {
+				logrus.Warnf("toSauce(): %v", err)
+				continue
+			}
 			sauce.Pretty = true
 		} else {
 			sauce = &Sauce{Raw: r}
@@ -228,3 +240,12 @@ func (c *Config) query(uri *url.URL, imageURL string) string {
 
 	return q.Encode()
 }
+
+type bySimilarity []*Sauce
+
+func (s bySimilarity) Len() int { return len(s) }
+
+func (s bySimilarity) Less(i, j int) bool {
+	return s[i].Similarity > s[j].Similarity
+}
+func (s bySimilarity) Swap(i, j int) { s[i], s[j] = s[j], s[i] }

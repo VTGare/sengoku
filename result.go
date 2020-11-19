@@ -44,7 +44,7 @@ type ResultData struct {
 	File         string      `json:"file,omitempty"`
 	GelbooruID   int         `json:"gelbooru_id,omitempty"`
 	IdolID       int         `json:"idol_id,omitempty"`
-	ImdbID       int         `json:"imdb_id,omitempty"`
+	ImdbID       interface{} `json:"imdb_id,omitempty"`
 	JpName       string      `json:"jp_name,omitempty"`
 	KonachanID   int         `json:"konachan_id,omitempty"`
 	Material     string      `json:"material,omitempty"`

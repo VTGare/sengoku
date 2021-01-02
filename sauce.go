@@ -390,6 +390,10 @@ func interfaceToInt(i interface{}) (int, error) {
 		return int(i.(int32)), nil
 	case int64:
 		return int(i.(int64)), nil
+	case float32:
+		return int(i.(float32)), nil
+	case float64:
+		return int(i.(float64)), nil
 	case string:
 		return strconv.Atoi(i.(string))
 	}

@@ -3,6 +3,7 @@ package sengoku
 import (
 	"fmt"
 	"net/url"
+	"reflect"
 	"regexp"
 	"strconv"
 )
@@ -12,8 +13,14 @@ var (
 	sites        = map[int]resultFunc{
 		5: func(r *Result) (*Sauce, error) {
 			urls := &SauceURLs{}
-			if r.Data.PixivID != 0 {
-				urls.Source = fmt.Sprintf("https://pixiv.net/en/artworks/%v", r.Data.PixivID)
+
+			pixivID, err := interfaceToInt(r.Data.PixivID)
+			if err != nil {
+				return nil, err
+			}
+
+			if pixivID != 0 {
+				urls.Source = fmt.Sprintf("https://pixiv.net/en/artworks/%v", pixivID)
 			} else if len(r.Data.ExternalURLs) != 0 {
 				urls.Source = r.Data.ExternalURLs[0]
 			}
@@ -38,8 +45,13 @@ var (
 		},
 		6: func(r *Result) (*Sauce, error) {
 			urls := &SauceURLs{}
-			if r.Data.PixivID != 0 {
-				urls.Source = fmt.Sprintf("https://pixiv.net/en/artworks/%v", r.Data.PixivID)
+
+			pixivID, err := interfaceToInt(r.Data.PixivID)
+			if err != nil {
+				return nil, err
+			}
+			if pixivID != 0 {
+				urls.Source = fmt.Sprintf("https://pixiv.net/en/artworks/%v", pixivID)
 			} else if len(r.Data.ExternalURLs) != 0 {
 				urls.Source = r.Data.ExternalURLs[0]
 			}
@@ -368,4 +380,19 @@ type SauceAuthor struct {
 type SauceURLs struct {
 	Source       string
 	ExternalURLs []string
+}
+
+func interfaceToInt(i interface{}) (int, error) {
+	switch i.(type) {
+	case int:
+		return i.(int), nil
+	case int32:
+		return int(i.(int32)), nil
+	case int64:
+		return int(i.(int64)), nil
+	case string:
+		return strconv.Atoi(i.(string))
+	}
+
+	return 0, fmt.Errorf("unknown interface type: %v", reflect.TypeOf(i).String())
 }

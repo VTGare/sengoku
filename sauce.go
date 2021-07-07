@@ -14,13 +14,18 @@ var (
 		5: func(r *Result) (*Sauce, error) {
 			urls := &SauceURLs{}
 
-			pixivID, err := interfaceToInt(r.Data.PixivID)
+			artworkID, err := interfaceToInt(r.Data.PixivID)
 			if err != nil {
 				return nil, err
 			}
 
-			if pixivID != 0 {
-				urls.Source = fmt.Sprintf("https://pixiv.net/en/artworks/%v", pixivID)
+			memberID, err := interfaceToInt(r.Data.MemberID)
+			if err != nil {
+				return nil, err
+			}
+
+			if artworkID != 0 {
+				urls.Source = fmt.Sprintf("https://pixiv.net/en/artworks/%v", artworkID)
 			} else if len(r.Data.ExternalURLs) != 0 {
 				urls.Source = r.Data.ExternalURLs[0]
 			}
@@ -36,7 +41,7 @@ var (
 				Similarity: sim,
 				Author: &SauceAuthor{
 					Name: r.Data.MemberName,
-					URL:  fmt.Sprintf("https://www.pixiv.net/en/users/%v", r.Data.MemberID),
+					URL:  fmt.Sprintf("https://www.pixiv.net/en/users/%v", memberID),
 				},
 				URLs: urls,
 				Raw:  r,
@@ -46,12 +51,18 @@ var (
 		6: func(r *Result) (*Sauce, error) {
 			urls := &SauceURLs{}
 
-			pixivID, err := interfaceToInt(r.Data.PixivID)
+			artworkID, err := interfaceToInt(r.Data.PixivID)
 			if err != nil {
 				return nil, err
 			}
-			if pixivID != 0 {
-				urls.Source = fmt.Sprintf("https://pixiv.net/en/artworks/%v", pixivID)
+
+			memberID, err := interfaceToInt(r.Data.MemberID)
+			if err != nil {
+				return nil, err
+			}
+
+			if artworkID != 0 {
+				urls.Source = fmt.Sprintf("https://pixiv.net/en/artworks/%v", artworkID)
 			} else if len(r.Data.ExternalURLs) != 0 {
 				urls.Source = r.Data.ExternalURLs[0]
 			}
@@ -60,13 +71,14 @@ var (
 			if err != nil {
 				return nil, err
 			}
+
 			sauce := &Sauce{
 				Title:      r.Data.Title,
 				Thumbnail:  r.Header.Thumbnail,
 				Similarity: sim,
 				Author: &SauceAuthor{
 					Name: r.Data.MemberName,
-					URL:  fmt.Sprintf("https://www.pixiv.net/en/users/%v", r.Data.MemberID),
+					URL:  fmt.Sprintf("https://www.pixiv.net/en/users/%v", memberID),
 				},
 				URLs: urls,
 				Raw:  r,
@@ -383,19 +395,19 @@ type SauceURLs struct {
 }
 
 func interfaceToInt(i interface{}) (int, error) {
-	switch i.(type) {
+	switch num := i.(type) {
 	case int:
-		return i.(int), nil
+		return num, nil
 	case int32:
-		return int(i.(int32)), nil
+		return int(num), nil
 	case int64:
-		return int(i.(int64)), nil
+		return int(num), nil
 	case float32:
-		return int(i.(float32)), nil
+		return int(num), nil
 	case float64:
-		return int(i.(float64)), nil
+		return int(num), nil
 	case string:
-		return strconv.Atoi(i.(string))
+		return strconv.Atoi(num)
 	}
 
 	return 0, fmt.Errorf("unknown interface type: %v", reflect.TypeOf(i).String())
